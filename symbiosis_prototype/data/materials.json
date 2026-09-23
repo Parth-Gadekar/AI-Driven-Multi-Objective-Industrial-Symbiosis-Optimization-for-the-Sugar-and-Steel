@@ -1,0 +1,109 @@
+{
+  "_notes": "Compatibility scores (0-1) are literature-informed judgement calls made for this prototype, not measured plant data. Sources discussed in chat: MDPI 'Sustainable Valorization of Waste and By-Products from Sugarcane Processing' (sugar ratios), Indian Bureau of Mines 'Slag - Iron and Steel' Yearbook chapter (steel ratios), CEA CO2 Baseline Database (grid emission factor), UK Govt GHG Conversion Factors (freight emission factor). Cement-side ratios (fly ash, bottom ash) are round-number placeholders pending a literature pass before the final review - flagged here on purpose so the team doesn't forget.",
+  "materials": [
+    {
+      "id": "bagasse",
+      "name": "Bagasse",
+      "source_industry": "Sugar",
+      "description": "Fibrous residue left after crushing sugarcane to extract juice.",
+      "typical_ratio": "~280-300 kg wet bagasse (≈50% moisture) per tonne of sugarcane crushed",
+      "compatible_industries": [
+        {"industry": "Paper & Pulp", "reuse_type": "raw material substitute for pulp", "compatibility_score": 0.85},
+        {"industry": "Power Generation (Cogeneration)", "reuse_type": "biomass fuel", "compatibility_score": 0.9},
+        {"industry": "Particle Board / Panel Manufacturing", "reuse_type": "fibre feedstock", "compatibility_score": 0.7}
+      ]
+    },
+    {
+      "id": "press_mud",
+      "name": "Press Mud (Filter Cake)",
+      "source_industry": "Sugar",
+      "description": "Sludge/filter cake left after clarifying sugarcane juice, rich in organic matter.",
+      "typical_ratio": "~30 kg wet press mud per tonne of sugarcane crushed",
+      "compatible_industries": [
+        {"industry": "Fertilizer / Composting", "reuse_type": "organic soil amendment", "compatibility_score": 0.92},
+        {"industry": "Biogas / Bio-CNG", "reuse_type": "anaerobic digestion feedstock", "compatibility_score": 0.78},
+        {"industry": "Cement", "reuse_type": "minor raw-mix organic additive (low volume use)", "compatibility_score": 0.35}
+      ]
+    },
+    {
+      "id": "molasses",
+      "name": "Molasses",
+      "source_industry": "Sugar",
+      "description": "Viscous by-product of sugar crystallization, high sugar content.",
+      "typical_ratio": "~41 kg molasses per tonne of sugarcane crushed",
+      "compatible_industries": [
+        {"industry": "Distillery / Ethanol", "reuse_type": "fermentation feedstock", "compatibility_score": 0.95},
+        {"industry": "Animal Feed", "reuse_type": "feed additive", "compatibility_score": 0.8},
+        {"industry": "Chemical Manufacturing", "reuse_type": "feedstock for organic acids/yeast", "compatibility_score": 0.6}
+      ]
+    },
+    {
+      "id": "bagasse_ash",
+      "name": "Bagasse Ash",
+      "source_industry": "Sugar",
+      "description": "Ash residue from burning bagasse in cogeneration boilers.",
+      "typical_ratio": "~8-10 kg ash per tonne of bagasse burned",
+      "compatible_industries": [
+        {"industry": "Cement", "reuse_type": "pozzolanic supplementary material", "compatibility_score": 0.75},
+        {"industry": "Brick Manufacturing", "reuse_type": "clay substitute / filler", "compatibility_score": 0.65}
+      ]
+    },
+    {
+      "id": "blast_furnace_slag",
+      "name": "Blast Furnace Slag",
+      "source_industry": "Steel",
+      "description": "Molten by-product from iron-making in the blast furnace, granulated for reuse.",
+      "typical_ratio": "~250-300 kg per tonne of hot metal (BF/BOF route)",
+      "compatible_industries": [
+        {"industry": "Cement", "reuse_type": "GGBS - clinker substitute", "compatibility_score": 0.95},
+        {"industry": "Road Construction", "reuse_type": "sub-base aggregate", "compatibility_score": 0.8}
+      ]
+    },
+    {
+      "id": "steel_slag",
+      "name": "Steel Slag",
+      "source_industry": "Steel",
+      "description": "By-product of the steel-making (converter/EAF) stage, distinct from blast furnace slag.",
+      "typical_ratio": "~100-150 kg per tonne of crude steel",
+      "compatible_industries": [
+        {"industry": "Road Construction", "reuse_type": "aggregate substitute", "compatibility_score": 0.82},
+        {"industry": "Cement", "reuse_type": "raw-mix iron source (limited proportion)", "compatibility_score": 0.55},
+        {"industry": "Land Reclamation / Fill", "reuse_type": "bulk fill material", "compatibility_score": 0.5}
+      ]
+    },
+    {
+      "id": "mill_scale",
+      "name": "Mill Scale",
+      "source_industry": "Steel",
+      "description": "Flaky iron-oxide by-product formed during hot rolling.",
+      "typical_ratio": "~20-30 kg per tonne of rolled steel",
+      "compatible_industries": [
+        {"industry": "Cement", "reuse_type": "iron-corrective raw material", "compatibility_score": 0.7},
+        {"industry": "Ferroalloy / Sinter Plants", "reuse_type": "recycled iron feed", "compatibility_score": 0.88}
+      ]
+    },
+    {
+      "id": "fly_ash",
+      "name": "Fly Ash",
+      "source_industry": "Thermal Power (linked to Cement demand)",
+      "description": "Fine particulate by-product captured from coal-fired power plant flue gas.",
+      "typical_ratio": "~100-150 kg per tonne of coal burned (placeholder pending literature pass)",
+      "compatible_industries": [
+        {"industry": "Cement", "reuse_type": "pozzolanic clinker substitute (PPC)", "compatibility_score": 0.93},
+        {"industry": "Brick Manufacturing", "reuse_type": "fly-ash brick feedstock", "compatibility_score": 0.75},
+        {"industry": "Road Construction", "reuse_type": "embankment fill material", "compatibility_score": 0.6}
+      ]
+    },
+    {
+      "id": "bottom_ash",
+      "name": "Bottom Ash",
+      "source_industry": "Thermal Power (linked to Cement demand)",
+      "description": "Coarser ash residue collected at the base of the coal furnace.",
+      "typical_ratio": "~15-25 kg per tonne of coal burned (placeholder pending literature pass)",
+      "compatible_industries": [
+        {"industry": "Cement", "reuse_type": "raw-mix aggregate", "compatibility_score": 0.6},
+        {"industry": "Road Construction", "reuse_type": "sub-base / embankment fill", "compatibility_score": 0.7}
+      ]
+    }
+  ]
+}

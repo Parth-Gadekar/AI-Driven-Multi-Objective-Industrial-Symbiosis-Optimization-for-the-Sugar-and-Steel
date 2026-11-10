@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Industrial Symbiosis Optimiser</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-mode="user">
+<header>
+  <div class="topbar">
+    <div>
+      <h1>Industrial Symbiosis Optimiser</h1>
+      <p class="sub user-only">Find a home for your factory's by-products: steel slag, bagasse ash and molasses.</p>
+      <p class="sub dev-only">Sugar, steel and cement exchange network for India. Multi-objective optimisation (NSGA-II) against four baselines and an LP weighted-sum reference front.</p>
+    </div>
+    <div class="modeswitch" role="group" aria-label="Choose view">
+      <button type="button" id="mode-user" aria-pressed="true">User</button>
+      <button type="button" id="mode-dev" aria-pressed="false">Developer</button>
+    </div>
+  </div>
+  <p class="banner user-only"><strong>Planning-stage estimates.</strong> Results are at state level (not plant to plant) and some prices and limits are assumptions, flagged on every result. Use them to shortlist options, then confirm with the receiving plant.</p>
+  <p class="banner dev-only"><strong>Pipeline test.</strong> State-level network: distances are hub-to-hub estimates, and unsourced prices and absorption shares are flagged placeholders (see Parameters). Treat results as method comparison, not as recommendations.</p>
+</header>
+
+<main id="user-view" class="user-only">
+<section class="panel" id="u-form" aria-labelledby="u-form-h">
+  <h2 id="u-form-h" class="visually-hidden">Tell us about your plant</h2>
+
+  <div class="step"><h3 class="steph">What kind of plant are you?</h3>
+    <div class="rolecards" id="u-roles"></div></div>
+
+  <div class="step" id="u-mat-step" hidden><h3 class="steph" id="u-mat-q">Which by-product?</h3>
+    <div class="chips" id="u-materials"></div></div>
+
+  <div class="step" id="u-state-step" hidden><h3 class="steph">Which state is your plant in?</h3>
+    <select id="u-state" aria-label="State"></select>
+    <p class="muted" id="u-state-note"></p></div>
+
+  <div class="step" id="u-tonnes-step" hidden><h3 class="steph">How many tonnes a year? <span class="opt">optional</span></h3>
+    <div class="inline"><input type="number" id="u-tonnes" min="0" step="100" inputmode="numeric" placeholder="e.g. 5000" aria-label="Tonnes per year"><span class="muted">tonnes per year</span></div></div>
+
+  <details class="more" id="u-more" hidden><summary>More options</summary>
+    <div class="grid">
+      <label>Data year<select id="u-season"></select></label>
+      <label>How much waste is available<select id="u-case"><option value="low">Lower than usual</option><option value="base" selected>Typical</option><option value="high">Higher than usual</option></select></label>
+    </div>
+  </details>
+</section>
+
+<section id="u-empty" class="panel emptystate">
+  <h2>How this works</h2>
+  <ol class="how">
+    <li><b>Tell us who you are.</b> Pick your plant type, by-product and state.</li>
+    <li><b>See where it can go.</b> We score each option on technical fit, economics, CO2 and use of the waste, and give you one best match.</li>
+    <li><b>Check, then call.</b> Each result lists what to ask the other plant.</li>
+  </ol>
+</section>
+
+<div id="u-result" hidden aria-live="polite">
+  <section class="panel hero" id="u-hero"></section>
+  <section class="panel" id="u-callout-wrap" hidden></section>
+  <section class="panel">
+    <h2 id="u-opts-h">Your options</h2>
+    <div class="optcards" id="u-top"></div>
+    <div class="row"><button type="button" class="ghost" id="u-toggle-all">Show all states</button></div>
+    <div class="tablewrap" id="u-all-wrap" hidden><table id="u-all"></table></div>
+  </section>
+  <section class="panel">
+    <h2>Map</h2>
+    <div id="umap" role="img" aria-label="Map of your state and the best partner states"></div>
+    <p class="muted">Lines go from your state hub to the partner state hubs. Locations are state-level, not plant locations.</p>
+  </section>
+  <section class="panel" id="u-plan-panel"></section>
+  <section class="panel">
+    <h2>Before you contact them</h2>
+    <p class="muted">Questions worth asking the other plant:</p>
+    <ul id="u-questions" class="qlist"></ul>
+  </section>
+  <section class="panel">
+    <details id="u-basis"><summary><h2 class="inl">What these numbers are based on</h2></summary>
+      <div id="u-basis-body"></div>
+    </details>
+  </section>
+</div>
+<p class="muted foot user-only">Switch to Developer view (top right) for the optimisation methods, trade-off charts, sensitivity tests and parameter tables.</p>
+</main>
+
+<main id="dev-view" class="dev-only">
+<section class="panel controls">
+  <h2>Scenario</h2>
+  <div class="grid">
+    <label>Sugar season<select id="season"></select></label>
+    <label>Availability case<select id="case"></select></label>
+    <label>Cost case<select id="cost_case"></select></label>
+    <label>Steel slag year<select id="steel_year"><option>2020-21</option><option>2024-25</option></select></label>
+    <label>Min. compatibility <output id="thr_out">0.50</output><input type="range" id="threshold" min="0.3" max="0.9" step="0.01" value="0.5"></label>
+  </div>
+  <h3>Weights for the weighted-sum method</h3>
+  <div class="grid">
+    <label>Economic <output></output><input type="range" class="w" id="w_economic" min="0" max="1" step="0.05" value="0.3"></label>
+    <label>Utilisation <output></output><input type="range" class="w" id="w_utilisation" min="0" max="1" step="0.05" value="0.3"></label>
+    <label>Transport work <output></output><input type="range" class="w" id="w_transport_work" min="0" max="1" step="0.05" value="0.15"></label>
+    <label>CO2 <output></output><input type="range" class="w" id="w_co2" min="0" max="1" step="0.05" value="0.25"></label>
+  </div>
+  <div class="row">
+    <button id="run">Run live</button>
+    <button id="reset" class="ghost">Load precomputed</button>
+    <span id="status" class="muted"></span>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Method comparison</h2>
+  <div class="kpis" id="kpis"></div>
+  <div class="tablewrap"><table id="cmp"></table></div>
+  <p class="muted" id="nsga_note"></p>
+</section>
+
+<section class="panel">
+  <h2>Pareto front</h2>
+  <div class="row">
+    <label>X axis<select id="xaxis"></select></label>
+    <label>Y axis<select id="yaxis"></select></label>
+  </div>
+  <div class="chartbox"><canvas id="pareto"></canvas></div>
+  <p class="muted">Dots are non-dominated solutions (NSGA-II, and LP solutions for 35 objective weightings). Labelled markers are the five methods.</p>
+</section>
+
+<section class="panel">
+  <h2>Matches <select id="method"></select></h2>
+  <div id="map"></div>
+  <div class="tablewrap"><table id="flows"></table></div>
+</section>
+
+<section class="panel">
+  <h2>Lanes</h2>
+  <div class="tablewrap"><table id="lanes"></table></div>
+  <h3>Not modelled yet</h3>
+  <ul id="notmod"></ul>
+</section>
+
+<section class="panel">
+  <h2>Sensitivity (one parameter at a time, weighted-sum solution)</h2>
+  <div class="tablewrap"><table id="sens"></table></div>
+</section>
+
+<section class="panel">
+  <h2>Parameters</h2>
+  <div class="tablewrap"><table id="params"></table></div>
+</section>
+
+<section class="panel">
+  <h2>Forecasting</h2>
+  <div id="forecast"></div>
+</section>
+</main>
+<script src="{{ url_for('static', filename='vendor/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='user.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+parameter,base,low,high,unit,status,basis
+road_cost_inr_per_tkm,3.18,2.58,3.78,INR/t-km,sourced_range,NTDPC 2014 low; NCAER 2025 via KPMG high; base midpoint (analyst)
+rail_cost_inr_per_tkm,1.65,1.41,1.90,INR/t-km,sourced_range,NTDPC 2014; KPMG/NCAER 2025; base midpoint (analyst)
+rail_threshold_km,500,200,500,km,sourced_qualitative,Infrastructure Today 2025 citing CEEW/Indian Railways
+rail_first_last_mile_km,100,50,150,km,PLACEHOLDER,Analyst assumption: road haul at both rail ends
+co2_road_kg_per_tkm,0.160,0.160,0.160,kg CO2/t-km,sourced_unit_unverified,MSE Working Paper 170 (2007-08 table; unit inferred)
+co2_rail_kg_per_tkm,0.029,0.029,0.029,kg CO2/t-km,sourced_unit_unverified,MSE Working Paper 170 (2007-08 table; unit inferred)
+cement_utilisation,0.70,0.60,0.80,fraction,PLACEHOLDER,Analyst assumption; IBM production column incomplete so not used
+steel_slag_cement_share,0.03,0.01,0.05,fraction of cement mass,PLACEHOLDER,Analyst assumption: slag as raw-meal CaO source limited by MgO/FeO; replace with plant data
+bagasse_ash_cement_share,0.05,0.02,0.10,fraction of cement mass,PLACEHOLDER,Analyst assumption; pozzolan limit depends on LOI/quality; replace with plant data
+steel_slag_cao_fraction,0.52,0.45,0.60,fraction,sourced_range,PMC8600512 Table 2 (BOF/LD CaO 45-60 percent)
+calcination_co2_per_t_cao,0.785,0.785,0.785,t CO2/t CaO,derived_stoichiometry,44/56
+bagasse_burn_fraction,0.82,0.75,0.90,fraction of bagasse,derived_from_source,RSC Adv 2020 d0ra06422j: 2.15 of 2.61 Mt bagasse burned (analyst calc)
+bagasse_ash_yield,0.030,0.021,0.040,fraction of burned bagasse,sourced_range,RSC Adv 2020 d0ra06422j: 2.1 percent (example) to 4 percent
+ash_cement_replacement_ratio,0.80,0.50,1.00,t cement avoided per t ash,PLACEHOLDER,Analyst assumption (pozzolanic efficiency)
+opc_co2_t_per_t,0.842,0.842,0.940,t CO2/t cement,sourced_range,Indian Cement Review 2023; Springer 2023
+steel_slag_value_inr_per_t,400,200,600,INR/t,PLACEHOLDER,No official source found; limestone-replacement value guess
+steel_slag_processing_inr_per_t,150,100,250,INR/t,PLACEHOLDER,No official source found; crushing/metal recovery/ageing guess
+bagasse_ash_value_inr_per_t,500,200,800,INR/t,PLACEHOLDER,No official source found
+bagasse_ash_processing_inr_per_t,200,100,300,INR/t,PLACEHOLDER,No official source found; drying/grinding guess
+molasses_price_usd_per_t,230,225,235,USD/t,sourced_commercial,Expert Market Research Q1-Q2 2026
+inr_per_usd,88,84,92,INR/USD,PLACEHOLDER,Analyst assumption; replace with current rate
+molasses_processing_inr_per_t,0,0,0,INR/t,assumption,Handling assumed inside price
+distillery_offtake_share,0.315,0.252,0.378,fraction of molasses supply,derived_estimate,Dataful/MoPNG ethanol supply by feedstock; see memory file P01
+compat_threshold,0.50,0.50,0.50,score,analyst_choice,Eligibility cut-off for lanes (step 1 scores)
+steel_scale_2024_25,1.0,1.0,1.0,multiplier,option,Optional uniform scaling of 2020-21 slag to 2024-25 using national crude steel ratio (computed in code)

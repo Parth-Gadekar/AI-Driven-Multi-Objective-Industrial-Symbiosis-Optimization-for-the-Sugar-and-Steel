@@ -121,3 +121,16 @@ tr.plan td:first-child{font-weight:600}
 .score-row{display:flex;flex-wrap:wrap;gap:5px}
 .score-chip{font-size:11.5px;border:1px solid var(--line);border-radius:99px;padding:2px 8px;background:var(--card)}
 .score-chip b{font-variant-numeric:tabular-nums}.score-chip.na{color:var(--mut);border-style:dashed}
+
+/* ---- Pin to pin tab ---- */
+.tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:1px solid var(--line)}
+.tabs button{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:9px 14px;cursor:pointer;color:var(--mut)}
+.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--acc)}
+.tabs button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.pinbtns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.pinbtns .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+#pmap{height:420px;border-radius:10px;border:1px solid var(--line);margin-bottom:8px}
+.pinicon{display:block;width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+.pinicon.exp,.dot.exp{background:#d9480f}
+.pinicon.imp,.dot.imp{background:#1971c2}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}

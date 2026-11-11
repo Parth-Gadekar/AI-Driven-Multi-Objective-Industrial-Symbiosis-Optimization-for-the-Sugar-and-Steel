@@ -9,12 +9,15 @@
   GET  /api/user/options      user mode: roles, by-products, states and priorities for the form
   GET  /api/user/advice       user mode: ranked destinations or sources for one plant
                               (?role=&material=&state=&tonnes=&season=&case=)
+  GET  /api/pin/meta          pin-to-pin (Maharashtra pilot): materials, bounding box
+  GET  /api/pin/analyse       pin-to-pin: one exporter and one importer location
+                              (?material=&exp_lat=&exp_lon=&imp_lat=&imp_lon=&tonnes=&capacity=&road_km=)
 """
 import json
 from functools import lru_cache
 from pathlib import Path
 from flask import Flask, jsonify, render_template, request
-from core import data as D, model as M, run as R, forecast as F, advise as A
+from core import data as D, model as M, run as R, forecast as F, advise as A, pin as PIN
 
 BASE = Path(__file__).resolve().parent
 RESULTS = BASE / "results"
@@ -102,6 +105,24 @@ def user_advice():
         res = A.advise(role=a.get("role", ""), state=a.get("state", ""), material=a.get("material") or None,
                        tonnes=tonnes,
                        season=a.get("season", "2024-25"), case=a.get("case", "base"))
+    except (ValueError, TypeError) as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify(res)
+
+
+@app.route("/api/pin/meta")
+def pin_meta():
+    return jsonify(PIN.meta())
+
+
+@app.route("/api/pin/analyse")
+def pin_analyse():
+    a = request.args
+    try:
+        num = lambda k: float(a[k]) if a.get(k) not in (None, "") else None
+        res = PIN.analyse(a.get("material", ""), (num("exp_lat"), num("exp_lon")), (num("imp_lat"), num("imp_lon")),
+                          tonnes=num("tonnes"), importer_capacity_t=num("capacity"), road_km=num("road_km"),
+                          season=a.get("season", "2024-25"), case=a.get("case", "base"))
     except (ValueError, TypeError) as e:
         return jsonify({"error": str(e)}), 400
     return jsonify(res)

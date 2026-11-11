@@ -182,6 +182,18 @@ def options(season: str = "2024-25", case: str = "base") -> dict:
     return {"roles": roles, "seasons": D.SEASONS, "cases": D.CASES, "compat_threshold": P.get("compat_threshold")}
 
 
+def assumptions_block(P, info: dict):
+    """The key inputs behind a material's numbers, with their status, and an overall confidence level."""
+    assumptions = []
+    for p in info["params"]:
+        label, unit, mult = PLAIN[p]
+        assumptions.append({"label": label, "value": round(P.get(p) * mult, 2), "unit": unit, "status": P.status(p),
+                            "range": [round(P.get(p, "low") * mult, 2), round(P.get(p, "high") * mult, 2)]})
+    n_ph = sum(a["status"] == "PLACEHOLDER" for a in assumptions)
+    confidence = "low" if n_ph >= 3 else "medium" if n_ph >= 1 or any(a["status"] == "derived_estimate" for a in assumptions) else "high"
+    return assumptions, n_ph, confidence
+
+
 def advise(role: str, state: str, material: str | None = None,
            tonnes: float | None = None, season: str = "2024-25", case: str = "base") -> dict:
     if role not in ROLES:
@@ -277,16 +289,7 @@ def advise(role: str, state: str, material: str | None = None,
                 "co2_t": moved * summary["avg_co2_t_per_t"],
                 "split": [{"state": r["state"], "tonnes": moved * r["plan_share_of_moved_pct"] / 100} for r in plan]}
 
-    P = net.params
-    assumptions = []
-    for p in info["params"]:
-        label, unit, mult = PLAIN[p]
-        st = P.status(p)
-        assumptions.append({"label": label, "value": round(P.get(p) * mult, 2), "unit": unit, "status": st,
-                            "range": [round(P.get(p, "low") * mult, 2), round(P.get(p, "high") * mult, 2)]})
-    n_ph = sum(a["status"] == "PLACEHOLDER" for a in assumptions)
-    confidence = "low" if n_ph >= 3 else "medium" if n_ph >= 1 or any(a["status"] == "derived_estimate" for a in assumptions) else "high"
-
+    assumptions, n_ph, confidence = assumptions_block(net.params, info)
     return {
         "request": {"role": role, "state": state, "material": material, "tonnes": tonnes, "season": season, "case": case},
         "direction": R["direction"], "material": {"id": material, "name": info["name"], "short": info["short"], "use": info["use"],

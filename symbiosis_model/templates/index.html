@@ -25,6 +25,11 @@
 </header>
 
 <main id="user-view" class="user-only">
+<div class="tabs" role="tablist" aria-label="Choose how to search">
+  <button type="button" role="tab" id="tab-state" aria-selected="true">Match by state</button>
+  <button type="button" role="tab" id="tab-pin" aria-selected="false">Pin to pin <span class="pill">Maharashtra</span></button>
+</div>
+<div id="u-state-flow">
 <section class="panel" id="u-form" aria-labelledby="u-form-h">
   <h2 id="u-form-h" class="visually-hidden">Tell us about your plant</h2>
 
@@ -83,6 +88,38 @@
       <div id="u-basis-body"></div>
     </details>
   </section>
+</div>
+</div>
+<div id="u-pin-flow" hidden>
+<section class="panel" id="p-form" aria-labelledby="p-form-h">
+  <h2 id="p-form-h" class="visually-hidden">Pin your plant and the receiving plant</h2>
+  <p class="muted">Pilot for Maharashtra. Drop a pin where your plant is and another where the receiving plant is, and get the analysis for that exact pair.</p>
+  <div class="step"><h3 class="steph">Which by-product do you send?</h3><div class="chips" id="p-materials"></div><p class="muted" id="p-mat-note"></p></div>
+  <div class="step"><h3 class="steph">Drop the two pins</h3>
+    <div class="pinbtns">
+      <button type="button" class="chip" id="p-set-exp" aria-pressed="true">Place my plant <span class="dot exp"></span></button>
+      <button type="button" class="chip" id="p-set-imp" aria-pressed="false">Place the receiving plant <span class="dot imp"></span></button>
+      <button type="button" class="ghost" id="p-example">Try an example</button>
+      <button type="button" class="ghost" id="p-clear">Clear pins</button>
+    </div>
+    <div id="pmap" role="application" aria-label="Map of Maharashtra. Click to place a pin, drag a pin to move it."></div>
+    <p class="muted" id="p-coords">Click the map to place your plant. Drag a pin to adjust it.</p>
+  </div>
+  <div class="step"><h3 class="steph">Quantities <span class="opt">optional</span></h3>
+    <div class="grid">
+      <label>Tonnes you send per year<input type="number" id="p-tonnes" min="0" step="100" inputmode="numeric" placeholder="e.g. 5000"></label>
+      <label>Tonnes per year the receiver can take<input type="number" id="p-cap" min="0" step="100" inputmode="numeric" placeholder="e.g. 20000"></label>
+    </div>
+  </div>
+</section>
+<section id="p-empty" class="panel emptystate"><h2>What you get</h2>
+  <ol class="how"><li><b>Distance and mode</b> for your exact pair, road or rail.</li><li><b>Money and CO2 per tonne</b>, with a low/high range, and the distance beyond which it stops paying.</li><li><b>A match score</b> from technical fit, economics, CO2 and use of waste, plus questions to ask the receiver.</li></ol></section>
+<div id="p-result" hidden aria-live="polite">
+  <section class="panel hero" id="p-hero"></section>
+  <section class="panel"><h2>Money against distance</h2><div class="chartbox"><canvas id="p-chart" role="img" aria-label="Net value per tonne against haul distance, with your pair marked"></canvas></div><p class="muted" id="p-chart-note"></p></section>
+  <section class="panel"><h2>Before you contact them</h2><ul id="p-questions" class="qlist"></ul></section>
+  <section class="panel"><details id="p-basis"><summary><h2 class="inl">What these numbers are based on</h2></summary><div id="p-basis-body"></div></details></section>
+</div>
 </div>
 <p class="muted foot user-only">Switch to Developer view (top right) for the optimisation methods, trade-off charts, sensitivity tests and parameter tables.</p>
 </main>
@@ -160,5 +197,6 @@
 <script src="{{ url_for('static', filename='vendor/leaflet.js') }}"></script>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 <script src="{{ url_for('static', filename='user.js') }}"></script>
+<script src="{{ url_for('static', filename='pin.js') }}"></script>
 </body>
 </html>
